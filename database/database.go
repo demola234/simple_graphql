@@ -104,12 +104,13 @@ func (db *DB) CreateJobListing(jobInfo model.CreateJobListingInput) *model.JobLi
 		log.Fatal(err)
 	}
 
+	println(result.SecureURL)
+
 	inserted, err := jobCollection.InsertOne(ctx, bson.M{
 		"title":       jobInfo.Title,
 		"description": jobInfo.Description,
 		"company":     jobInfo.Company,
 		"url":         jobInfo.URL,
-		"image":       result.SecureURL,
 	})
 
 	if err != nil {
