@@ -70,12 +70,12 @@ func (db *DB) GetJobs() []*model.JobListing {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	var jobListing []*model.JobListing
-	cusor, err := jobCollection.Find(ctx, bson.M{})
+	cursor, err := jobCollection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err = cusor.All(context.TODO(), &jobListing); err != nil {
+	if err = cursor.All(context.TODO(), &jobListing); err != nil {
 		log.Fatal(err)
 	}
 
