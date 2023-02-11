@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/demola234/golang-graphql/graph/model"
-	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var connectionString = "mongodb://localhost:27017"
+var connectionString = "mongodb+srv://dbAdemola:Ademola$123@cluster0.4znphzp.mongodb.net/?retryWrites=true&w=majority"
 
 type DB struct {
 	client *mongo.Client
@@ -25,7 +24,7 @@ func Connect() *DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
 	err = client.Connect(ctx)
@@ -39,8 +38,6 @@ func Connect() *DB {
 	}
 	return &DB{client: client}
 }
-
-var validate = validator.New()
 
 func (db *DB) OpenCollection() *mongo.Client {
 	return db.client
