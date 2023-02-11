@@ -52,6 +52,7 @@ type ComplexityRoot struct {
 		Company     func(childComplexity int) int
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
+		Image       func(childComplexity int) int
 		Title       func(childComplexity int) int
 		URL         func(childComplexity int) int
 	}
@@ -114,12 +115,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.JobListing.Description(childComplexity), true
 
-	case "JobListing._id":
+	case "JobListing.id":
 		if e.complexity.JobListing.ID == nil {
 			break
 		}
 
 		return e.complexity.JobListing.ID(childComplexity), true
+
+	case "JobListing.image":
+		if e.complexity.JobListing.Image == nil {
+			break
+		}
+
+		return e.complexity.JobListing.Image(childComplexity), true
 
 	case "JobListing.title":
 		if e.complexity.JobListing.Title == nil {
@@ -445,8 +453,8 @@ func (ec *executionContext) fieldContext_DeleteJobResponse_deleteJobId(ctx conte
 	return fc, nil
 }
 
-func (ec *executionContext) _JobListing__id(ctx context.Context, field graphql.CollectedField, obj *model.JobListing) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_JobListing__id(ctx, field)
+func (ec *executionContext) _JobListing_id(ctx context.Context, field graphql.CollectedField, obj *model.JobListing) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_JobListing_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -476,7 +484,7 @@ func (ec *executionContext) _JobListing__id(ctx context.Context, field graphql.C
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_JobListing__id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_JobListing_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "JobListing",
 		Field:      field,
@@ -665,6 +673,50 @@ func (ec *executionContext) fieldContext_JobListing_url(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _JobListing_image(ctx context.Context, field graphql.CollectedField, obj *model.JobListing) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_JobListing_image(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Image, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_JobListing_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "JobListing",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createJobListing(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createJobListing(ctx, field)
 	if err != nil {
@@ -703,8 +755,8 @@ func (ec *executionContext) fieldContext_Mutation_createJobListing(ctx context.C
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_JobListing__id(ctx, field)
+			case "id":
+				return ec.fieldContext_JobListing_id(ctx, field)
 			case "title":
 				return ec.fieldContext_JobListing_title(ctx, field)
 			case "description":
@@ -713,6 +765,8 @@ func (ec *executionContext) fieldContext_Mutation_createJobListing(ctx context.C
 				return ec.fieldContext_JobListing_company(ctx, field)
 			case "url":
 				return ec.fieldContext_JobListing_url(ctx, field)
+			case "image":
+				return ec.fieldContext_JobListing_image(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type JobListing", field.Name)
 		},
@@ -769,8 +823,8 @@ func (ec *executionContext) fieldContext_Mutation_updateJobListing(ctx context.C
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_JobListing__id(ctx, field)
+			case "id":
+				return ec.fieldContext_JobListing_id(ctx, field)
 			case "title":
 				return ec.fieldContext_JobListing_title(ctx, field)
 			case "description":
@@ -779,6 +833,8 @@ func (ec *executionContext) fieldContext_Mutation_updateJobListing(ctx context.C
 				return ec.fieldContext_JobListing_company(ctx, field)
 			case "url":
 				return ec.fieldContext_JobListing_url(ctx, field)
+			case "image":
+				return ec.fieldContext_JobListing_image(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type JobListing", field.Name)
 		},
@@ -893,8 +949,8 @@ func (ec *executionContext) fieldContext_Query_jobs(ctx context.Context, field g
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_JobListing__id(ctx, field)
+			case "id":
+				return ec.fieldContext_JobListing_id(ctx, field)
 			case "title":
 				return ec.fieldContext_JobListing_title(ctx, field)
 			case "description":
@@ -903,6 +959,8 @@ func (ec *executionContext) fieldContext_Query_jobs(ctx context.Context, field g
 				return ec.fieldContext_JobListing_company(ctx, field)
 			case "url":
 				return ec.fieldContext_JobListing_url(ctx, field)
+			case "image":
+				return ec.fieldContext_JobListing_image(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type JobListing", field.Name)
 		},
@@ -948,8 +1006,8 @@ func (ec *executionContext) fieldContext_Query_job(ctx context.Context, field gr
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_JobListing__id(ctx, field)
+			case "id":
+				return ec.fieldContext_JobListing_id(ctx, field)
 			case "title":
 				return ec.fieldContext_JobListing_title(ctx, field)
 			case "description":
@@ -958,6 +1016,8 @@ func (ec *executionContext) fieldContext_Query_job(ctx context.Context, field gr
 				return ec.fieldContext_JobListing_company(ctx, field)
 			case "url":
 				return ec.fieldContext_JobListing_url(ctx, field)
+			case "image":
+				return ec.fieldContext_JobListing_image(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type JobListing", field.Name)
 		},
@@ -2883,7 +2943,7 @@ func (ec *executionContext) unmarshalInputCreateJobListingInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "company", "url"}
+	fieldsInOrder := [...]string{"title", "description", "company", "url", "image"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -2922,6 +2982,14 @@ func (ec *executionContext) unmarshalInputCreateJobListingInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			it.Image, err = ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -2935,7 +3003,7 @@ func (ec *executionContext) unmarshalInputUpdateJobListingInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "company", "url"}
+	fieldsInOrder := [...]string{"title", "description", "company", "url", "image"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -2971,6 +3039,14 @@ func (ec *executionContext) unmarshalInputUpdateJobListingInput(ctx context.Cont
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
 			it.URL, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			it.Image, err = ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3026,9 +3102,9 @@ func (ec *executionContext) _JobListing(ctx context.Context, sel ast.SelectionSe
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("JobListing")
-		case "_id":
+		case "id":
 
-			out.Values[i] = ec._JobListing__id(ctx, field, obj)
+			out.Values[i] = ec._JobListing_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -3057,6 +3133,13 @@ func (ec *executionContext) _JobListing(ctx context.Context, sel ast.SelectionSe
 		case "url":
 
 			out.Values[i] = ec._JobListing_url(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "image":
+
+			out.Values[i] = ec._JobListing_image(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -3935,6 +4018,22 @@ func (ec *executionContext) unmarshalOUpdateJobListingInput2ᚖgithubᚗcomᚋde
 	}
 	res, err := ec.unmarshalInputUpdateJobListingInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v interface{}) (*graphql.Upload, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalUpload(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, sel ast.SelectionSet, v *graphql.Upload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalUpload(*v)
+	return res
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

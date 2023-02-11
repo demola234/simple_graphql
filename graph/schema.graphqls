@@ -2,13 +2,15 @@
 #
 # https://gqlgen.com/getting-started/
 
+scalar Upload
 
 type JobListing {
-  _id: ID!
+  id: ID!
   title: String!
   description: String!
   company: String!
   url: String!
+  image: String!
 }
 
 type Query {
@@ -22,12 +24,12 @@ type Mutation {
   deleteJobListing(id: ID!): DeleteJobResponse!
 }
 
-
 input CreateJobListingInput {
   title: String!
   description: String!
   company: String!
   url: String!
+  image: Upload
 }
 
 input UpdateJobListingInput {
@@ -35,6 +37,7 @@ input UpdateJobListingInput {
   description: String
   company: String
   url: String
+  image: Upload
 }
 
 type DeleteJobResponse {

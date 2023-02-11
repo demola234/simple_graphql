@@ -2,11 +2,16 @@
 
 package model
 
+import (
+	"github.com/99designs/gqlgen/graphql"
+)
+
 type CreateJobListingInput struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Company     string `json:"company"`
-	URL         string `json:"url"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
+	Company     string          `json:"company"`
+	URL         string          `json:"url"`
+	Image       *graphql.Upload `json:"image"`
 }
 
 type DeleteJobResponse struct {
@@ -14,16 +19,18 @@ type DeleteJobResponse struct {
 }
 
 type JobListing struct {
-	ID          string `json:"_id"`
+	ID          string `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Company     string `json:"company"`
 	URL         string `json:"url"`
+	Image       string `json:"image"`
 }
 
 type UpdateJobListingInput struct {
-	Title       *string `json:"title"`
-	Description *string `json:"description"`
-	Company     *string `json:"company"`
-	URL         *string `json:"url"`
+	Title       *string         `json:"title"`
+	Description *string         `json:"description"`
+	Company     *string         `json:"company"`
+	URL         *string         `json:"url"`
+	Image       *graphql.Upload `json:"image"`
 }
