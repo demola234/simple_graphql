@@ -3,11 +3,8 @@ package database
 import (
 	"context"
 	"log"
-	"strings"
 	"time"
 
-	"github.com/cloudinary/cloudinary-go"
-	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/demola234/golang-graphql/graph/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -70,12 +67,11 @@ func (db *DB) GetJobs() []*model.JobListing {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	var jobListing []*model.JobListing
-	cursor, err := jobCollection.Find(ctx, bson.D{})
+	cusor, err := jobCollection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	if err = cursor.All(context.TODO(), &jobListing); err != nil {
+	if err = cusor.All(context.TODO(), &jobListing); err != nil {
 		log.Fatal(err)
 	}
 
@@ -87,30 +83,12 @@ func (db *DB) CreateJobListing(jobInfo model.CreateJobListingInput) *model.JobLi
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	cld, _ := cloudinary.NewFromURL("cloudinary://211576879732455:W6p_HMMIrDZkEfheHRUHIkSTdOo@dcnuiaskr")
-	// Get the preferred name of the file if its not supplied
-	fileName := jobInfo.Image.Filename
-
-	image, err := jobInfo.Image.File.Read([]byte{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	result, err := cld.Upload.Upload(ctx, image, uploader.UploadParams{
-		PublicID: fileName,
-		// Split the tags by comma
-		Tags: strings.Split(",", "profile"),
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	println(result.SecureURL)
-
 	inserted, err := jobCollection.InsertOne(ctx, bson.M{
 		"title":       jobInfo.Title,
 		"description": jobInfo.Description,
 		"company":     jobInfo.Company,
 		"url":         jobInfo.URL,
+		
 	})
 
 	if err != nil {
@@ -136,23 +114,6 @@ func (db *DB) UpdateJobListing(jobId string, jobModel *model.UpdateJobListingInp
 
 	updateInfo := bson.M{}
 
-	cld, _ := cloudinary.NewFromURL("cloudinary://211576879732455:W6p_HMMIrDZkEfheHRUHIkSTdOo@dcnuiaskr")
-	// Get the preferred name of the file if its not supplied
-	fileName := jobModel.Image.Filename
-
-	image, err := jobModel.Image.File.Read([]byte{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	imageResult, err := cld.Upload.Upload(ctx, image, uploader.UploadParams{
-		PublicID: fileName,
-		// Split the tags by comma
-		Tags: strings.Split(",", "profile"),
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	if jobModel.Title != nil {
 		updateInfo["title"] = jobModel.Title
 	}
@@ -164,9 +125,6 @@ func (db *DB) UpdateJobListing(jobId string, jobModel *model.UpdateJobListingInp
 	}
 	if jobModel.URL != nil {
 		updateInfo["url"] = jobModel.URL
-	}
-	if jobModel.Image != nil {
-		updateInfo["image"] = imageResult.SecureURL
 	}
 
 	_id, _ := primitive.ObjectIDFromHex(jobId)
